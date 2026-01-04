@@ -1,8 +1,6 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { UserProfile, CareerPlan } from "../types";
 
-const apiKey = process.env.API_KEY;
-
 // We strictly define the schema to ensure the UI can render the data consistently.
 const careerOptionSchema: Schema = {
   type: Type.OBJECT,
@@ -33,11 +31,7 @@ const responseSchema: Schema = {
 };
 
 export const generateCareerPlan = async (profile: UserProfile): Promise<CareerPlan> => {
-  if (!apiKey) {
-    throw new Error("API Key is missing.");
-  }
-
-  const ai = new GoogleGenAI({ apiKey });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const prompt = `
     Act as a World-Class Career Strategist.
@@ -69,7 +63,7 @@ export const generateCareerPlan = async (profile: UserProfile): Promise<CareerPl
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview", // Supports search + strong reasoning
+      model: "gemini-3-flash-preview", 
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
