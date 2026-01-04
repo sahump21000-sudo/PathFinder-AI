@@ -31,7 +31,12 @@ const responseSchema: Schema = {
 };
 
 export const generateCareerPlan = async (profile: UserProfile): Promise<CareerPlan> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = import.meta.env.VITE_API_KEY;
+  if (!apiKey) {
+    throw new Error("API Key is missing. Please ensure VITE_API_KEY is set in your environment variables (or .env file).");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
 
   const prompt = `
     Act as a World-Class Career Strategist.
